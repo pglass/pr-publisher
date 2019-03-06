@@ -8,7 +8,7 @@ class TablePublisher(BasePublisher):
 
     def publish(self, publish_entries):
         fields = [
-            "+1's",
+            "reviews",
             "merge state",
             "action needed",
             "title",
@@ -25,7 +25,7 @@ class TablePublisher(BasePublisher):
 
         for entry in publish_entries:
             row = [
-                entry.approval_count if entry.approval_count > 0 else "-",
+                "✓" * entry.approval_count + "✗" * entry.request_changes_count,
                 entry.mergeable_state,
                 entry.action_string,
                 entry.pr.title,

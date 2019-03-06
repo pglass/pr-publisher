@@ -1,6 +1,8 @@
 from collections import Counter
 from datetime import datetime, timezone
 
+from pr_publisher import const
+
 NOW = datetime.utcnow().replace(tzinfo=timezone.utc)
 
 
@@ -46,8 +48,8 @@ class PublishEntry:
         self.mergeable_state = pr.mergeable_state
 
         c = Counter([x.state for x in approvals])
-        self.approval_count = c["APPROVED"]
-        self.request_changes_count = c["REQUEST_CHANGES"]
+        self.approval_count = c[const.APPROVED]
+        self.request_changes_count = c[const.CHANGES_REQUESTED]
         assert self.approval_count + self.request_changes_count == len(approvals)
 
         self.approvals_needed_count = None

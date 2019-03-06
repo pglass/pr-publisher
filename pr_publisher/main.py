@@ -3,6 +3,7 @@ import logging
 import configargparse
 import github3
 
+from pr_publisher import const
 from pr_publisher.entry import PublishEntry
 from pr_publisher.publishers.slack import SlackPublisher
 from pr_publisher.publishers.table import TablePublisher
@@ -136,7 +137,7 @@ class Main:
 
         - APPROVED
         - DISMISSED
-        - REQUEST_CHANGES
+        - CHANGES_REQUESTED
         - COMMENTED
         - PENDING
             Pending is for unsubmitted reviews. Only the current user's
@@ -154,9 +155,9 @@ class Main:
             user_key = review.user.login
 
             # Ignore reviews that don't approve or disapprove
-            if review.state in ["COMMENTED", "PENDING"]:
+            if review.state in [const.COMMENTED, const.PENDING]:
                 continue
-            elif review.state == "DISMISSED":
+            elif review.state == const.DISMISSED:
                 # Could a user approve twice over the life of a PR, and then
                 # dismiss the first approval, but not the second??
                 #
@@ -165,7 +166,10 @@ class Main:
                     del approvals_by_user[user_key]
                 except KeyError:
                     pass
-            elif review.state in ["APPROVED", "REQUEST_CHANGES"]:
+            elif review.state in [const.APPROVED, const.CHANGES_REQUESTED]:
                 approvals_by_user[user_key] = review
+            else:
+                raise Exception(
+                    "[BUG!] Unhandled review state %s" % review.state)
 
         return sorted(approvals_by_user.values(), key=lambda r: r.submitted_at)
