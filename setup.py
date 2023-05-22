@@ -19,7 +19,7 @@ setup_params = dict(
         "PTable==0.9.2",
         "ConfigArgParse==0.14.0",
         "github3.py==1.3.0",
-        "requests==2.21.0",
+        "requests==2.31.0",
     ],
     entry_points={"console_scripts": ["pr-publisher = pr_publisher.cli:main"]},
     classifiers=[
